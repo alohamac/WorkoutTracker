@@ -22,19 +22,19 @@ const HomeScreen = () =>{
     return (
         <View style={styles.root}>
             <Text>Profile</Text>
-            <Text style = {styles.text}>{data ? JSON.parse(data).username : ''}</Text>
+            <Text style = {styles.boldText}>{data ? JSON.parse(data).username : ''}</Text>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     root: {
-        alignItems: 'center',
-        padding: 20,
-        paddingTop: Platform.OS === 'ios' ? 40 : 0, // Add extra padding for iOS devices with notche
-    },
-    text: {
       fontFamily: 'Helvetica Pro Textbook',
+      padding: 20,
+      paddingTop: Platform.OS === 'ios' ? 50 : 20, // Add extra padding for iOS devices with notche
+      color: 'red'
+    },
+    boldText: {
       fontSize: 30, 
       fontWeight: 'bold',
       alignItems: 'baseline'
