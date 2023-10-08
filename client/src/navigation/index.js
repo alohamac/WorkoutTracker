@@ -21,10 +21,17 @@ const Tab = createBottomTabNavigator();
 const Navigation = () => {
     return (
         <NavigationContainer>
+           {/* <Stack.Navigator screenOptions={{headerShown: false}}>
+            <Stack.Screen name="LoginScreen" component={LoginScreen} /> 
+            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="History" component={HistoryScreen} />
+            <Stack.Screen name="StartWorkout" component={StartWorkoutScreen} />
+            <Stack.Screen name="ExercisesScreen" component={ExercisesScreen} />
+          </Stack.Navigator> */}
           <Tab.Navigator
             initialRouteName={homeName}
             screenOptions={({ route }) => ({
-              tabBarIcon: ({ focused, color, size }) => {
+              tabBarIcon: ({ focused, color }) => {
                 let iconName;
                 let rn = route.name;
                 if (rn === homeName) {

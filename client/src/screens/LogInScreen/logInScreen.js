@@ -20,6 +20,8 @@ const LoginScreen = () => {
             .then(res=>res.json())
             .then(async (result)=>{
                 await AsyncStorage.setItem('user', JSON.stringify(result));
+                await AsyncStorage.setItem('username', JSON.stringify(result.username));
+                await AsyncStorage.setItem('userid', JSON.stringify(result.token));
                 navigation.navigate('Home')             
             }).catch((error)=>{
                 console.log(error)
