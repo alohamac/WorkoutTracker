@@ -1,16 +1,15 @@
 import {View, Text, StyleSheet} from 'react-native';
 import React, { useEffect, useState } from 'react';
-import useUserFetch from '../../helpers/AsyncStorageUtils';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const HomeScreen = () =>{
-    const [idk, setIdk] = useState(null);
+    const [data, setData] = useState(null);
 
     useEffect(() => {
       async function fetchUser() {
         try {
           const user = await AsyncStorage.getItem('user');
-          setIdk(user);
+          setData(user);
         } catch (error) {
           console.error('Error fetching user:', error);
         }
@@ -22,17 +21,24 @@ const HomeScreen = () =>{
   
     return (
         <View style={styles.root}>
-            <Text>{idk}</Text>
+            <Text>Profile</Text>
+            <Text style = {styles.boldText}>{data ? JSON.parse(data).username : ''}</Text>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     root: {
-        alignItems: 'center',
-        padding: 20,
-        paddingTop: Platform.OS === 'ios' ? 40 : 0, // Add extra padding for iOS devices with notche
+      fontFamily: 'Helvetica Pro Textbook',
+      padding: 20,
+      paddingTop: Platform.OS === 'ios' ? 50 : 20, // Add extra padding for iOS devices with notche
+      color: 'red'
     },
+    boldText: {
+      fontSize: 30, 
+      fontWeight: 'bold',
+      alignItems: 'baseline'
+    }
 });
 
 export default HomeScreen;

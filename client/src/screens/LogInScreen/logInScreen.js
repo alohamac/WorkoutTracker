@@ -14,10 +14,14 @@ const LoginScreen = () => {
     const {height} = useWindowDimensions();
     const navigation = useNavigation();    
     const onSignInPressed = async () => {
-        const test = await fetch(`http://localhost:8080/users/logInUser/${username}/${password}`)
+        const baseUrl = Platform.OS === 'android' ? '10.0.2.2' : 'localhost';
+
+        const test = await fetch(`http://${baseUrl}:8080/users/logInUser/${username}/${password}`)
             .then(res=>res.json())
             .then(async (result)=>{
                 await AsyncStorage.setItem('user', JSON.stringify(result));
+                await AsyncStorage.setItem('username', JSON.stringify(result.username));
+                await AsyncStorage.setItem('userid', JSON.stringify(result.token));
                 navigation.navigate('Home')             
             }).catch((error)=>{
                 console.log(error)

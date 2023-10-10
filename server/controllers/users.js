@@ -21,8 +21,7 @@ export const logInUser = async (req, res) =>{
         /*TODO: Authentication*/
         var length = Object.keys(rows).length;
         if (length==0) throw new Error("Somethings up")
-        console.log(length)
-        res.json(rows)
+        res.json(rows[0])
     } catch (error){
         error.message = 'Invalid username or password.'
         

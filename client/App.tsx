@@ -12,7 +12,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 function App(): JSX.Element {
+  
   return (<SafeAreaView style={styles.root}>
+    
             <Navigation />
           </SafeAreaView>);
     

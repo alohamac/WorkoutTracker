@@ -329,3 +329,4 @@ dist
 # IntelliJ based IDEs
 .idea
 ios/Pods
+android/app/build
