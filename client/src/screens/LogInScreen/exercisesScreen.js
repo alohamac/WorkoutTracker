@@ -30,21 +30,26 @@ const ExercisesScreen = () => {
   return (
     <View style={styles.root}>
       <AlphabetList
+        style={styles.alphabetList}
         data={exercises}
         indexLetterStyle={{ 
           color: 'blue', 
           fontSize: 12,
         }}  
-        renderItem={({ item }) => (
-          <View>
-            <Text style={styles.boldText}>{item.value} FUCK</Text>
+        renderCustomItem={( item ) => (
+          <View style={styles.listItemContainer}>
+            <Text style={styles.listItemLabel}>{item.value}</Text>
+            <Text style={styles.listItemCategory}>{item.category}</Text>
           </View>
         )}
         renderCustomSectionHeader={(section) => (
           <View style={styles.sectionHeaderContainer}>
-            <Text style={styles.sectionHeaderLabel}>{section.title}</Text>
+            <Text style={styles.sectionHeaderLabel}>
+              {section.title}
+            </Text>
           </View>
         )}  
+        indexContainerStye={{ background: 'red'}}
       />
     </View>
   );
@@ -53,13 +58,29 @@ const ExercisesScreen = () => {
 const styles = StyleSheet.create({
   root: {
     fontFamily: 'Helvetica Pro Textbook',
-    padding: 20,
-    paddingTop: Platform.OS === 'ios' ? 50 : 20, // Add extra padding for iOS devices with notche
+    padding: 10,
+    //paddingTop: Platform.OS === 'ios' ? 50 : 20, // Add extra padding for iOS devices with notche
   },
-  boldText: {
-    fontSize: 30, 
-    fontWeight: 'bold',
-    alignItems: 'baseline'
+  sectionHeaderContainer: {
+    paddingTop:15
+  },
+  sectionHeaderLabel:{
+    color: 'grey',
+    fontSize: 16
+  },
+  listItemContainer: {
+    borderTopColor: 'grey',
+    borderTopWidth: 1,
+  },
+  listItemLabel:{
+    height:  Platform.OS === 'ios' ? 20: 25,
+    fontSize: 20,
+    paddingBottom: Platform.OS === 'ios' ? 25: 0
+  },
+  listItemCategory:{
+    fontSize: 14,
+    paddingBottom: 5,
+    color: 'grey'
   }
 });
 
