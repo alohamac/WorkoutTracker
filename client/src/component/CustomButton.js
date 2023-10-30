@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, Pressable, StyleSheet} from 'react-native';
 
-const CustomButton = ({onPress, text, type = 'PRIMARY', bgColor, fgColor}) => {
+const CustomButton = ({onPress, text, type = 'PRIMARY', bgColor, fgColor, fSize}) => {
   return (
     <Pressable
       onPress={onPress}
@@ -15,6 +15,7 @@ const CustomButton = ({onPress, text, type = 'PRIMARY', bgColor, fgColor}) => {
           styles.text,
           styles[`text_${type}`],
           fgColor ? {color: fgColor} : {},
+          fSize ? {fontSize: fSize} : {},
         ]}>
         {text}
       </Text>

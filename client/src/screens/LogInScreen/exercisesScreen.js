@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { AlphabetList } from 'react-native-section-alphabet-list';
 
 const ExercisesScreen = () => {
