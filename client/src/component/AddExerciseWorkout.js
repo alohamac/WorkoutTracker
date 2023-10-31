@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text, Modal, StyleSheet} from 'react-native';
 import ExercisesScreen from '../screens/LogInScreen/exercisesScreen';
 import CustomButton from './CustomButton';
+import SelectExercises from './SelectExercise';
 
 const ExerciseModal = ({visible, closeModal}) => {
   return (
@@ -10,7 +11,7 @@ const ExerciseModal = ({visible, closeModal}) => {
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>Add Exercises</Text>
           <CustomButton text="Close" onPress={closeModal} />
-          <ExercisesScreen />
+          <SelectExercises />
         </View>
       </View>
     </Modal>
