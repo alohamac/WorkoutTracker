@@ -4,9 +4,10 @@ import {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {AlphabetList} from 'react-native-section-alphabet-list';
 
-const SelectExercises = () => {
+const SelectExercises = ({setSelectedExercises, selectedExercises}) => {
   const [exercises, SetExercises] = useState([]);
   const [selectedItems, SetSelectedItems] = useState([]);
+
   useEffect(() => {
     async function fetchExercises() {
       const baseUrl = Platform.OS === 'android' ? '10.0.2.2' : 'localhost';
@@ -28,16 +29,6 @@ const SelectExercises = () => {
     fetchExercises();
   }, []);
 
-  const toggleItemSelection = item => {
-    if (selectedItems.includes(item.value)) {
-      SetSelectedItems(
-        selectedItems.filter(selectedItem => selectedItem !== item.value),
-      );
-    } else {
-      // Item is not selected, so add it to the selection
-      SetSelectedItems([...selectedItems, item.value]);
-    }
-  };
 
   return (
     <View style={styles.root}>
@@ -52,11 +43,11 @@ const SelectExercises = () => {
           <Pressable
             style={[
               styles.listItemContainer,
-              selectedItems.includes(item.value)
+              selectedExercises.includes(item.value)
                 ? styles.listItemSelected
                 : null,
             ]}
-            onPress={() => toggleItemSelection(item)}>
+            onPress={() => setSelectedExercises(item)}>
             <Text style={styles.listItemLabel}>{item.value}</Text>
             <Text style={styles.listItemCategory}>{item.category}</Text>
           </Pressable>
