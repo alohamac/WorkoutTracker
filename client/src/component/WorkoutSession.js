@@ -23,7 +23,8 @@ const WorkoutSession = () => {
   };
 
   const updateSelectedExercises = selectedExercises => {
-    setExercises([...Exercises, selectedExercises]);
+    Exercises.push(...selectedExercises);
+    console.log(Exercises);
   };
 
   return (
@@ -47,18 +48,18 @@ const WorkoutSession = () => {
               }}
             />
           </View>
-          {Exercises.length && (
+          {Exercises.length ? (
             <View style={styles.selectedExercisesContainer}>
               <Text style={styles.selectedExercisesTitle}>
                 Selected Exercises:
               </Text>
               {Exercises.map((exercise, index) => (
                 <Text key={index} style={styles.selectedExerciseItem}>
-                  {exercise}
+                  {exercise.value}
                 </Text>
               ))}
             </View>
-          )}
+          ) : null}
         </View>
       </BottomSheet>
       {isExerciseModalVisible && (

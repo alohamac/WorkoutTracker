@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {View, Text, Modal, StyleSheet} from 'react-native';
-import ExercisesScreen from '../screens/LogInScreen/exercisesScreen';
 import CustomButton from './CustomButton';
 import SelectExercises from './SelectExercise';
 
@@ -8,12 +7,13 @@ const ExerciseModal = ({closeModal, updateSelectedExercises}) => {
   const [selectedExercises, setSelectedExercises] = useState([]);
 
   const toggleItemSelection = item => {
-    if (selectedExercises.includes(item.value)) {
+		console.log(selectedExercises)
+    if (selectedExercises.includes(item)) {
       setSelectedExercises(
-        selectedExercises.filter(selectedItem => selectedItem !== item.value),
+        selectedExercises.filter(selectedItem => selectedItem !== item),
       );
     } else {
-      setSelectedExercises([...selectedExercises, item.value]);
+      setSelectedExercises([...selectedExercises, item]);
     }
   };
 
@@ -27,11 +27,14 @@ const ExerciseModal = ({closeModal, updateSelectedExercises}) => {
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>Add Exercises</Text>
-          <CustomButton text="Add Exercises" onPress={closeAndSendSelectedExercises}/>
+          <CustomButton
+            text="Add Exercises"
+            onPress={closeAndSendSelectedExercises}
+          />
           <CustomButton text="Close" onPress={closeModal} />
           <SelectExercises
             setSelectedExercises={toggleItemSelection}
-						selectedExercises={selectedExercises}
+            selectedExercises={selectedExercises}
           />
         </View>
       </View>

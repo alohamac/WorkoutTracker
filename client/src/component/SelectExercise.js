@@ -42,7 +42,7 @@ const SelectExercises = ({setSelectedExercises, selectedExercises}) => {
           <Pressable
             style={[
               styles.listItemContainer,
-              selectedExercises.includes(item.value)
+              selectedExercises.includes(item)
                 ? styles.listItemSelected
                 : null,
             ]}
@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
   root: {
     fontFamily: 'Helvetica Pro Textbook',
     padding: 10,
+    flex: 1,
     //paddingTop: Platform.OS === 'ios' ? 50 : 20, // Add extra padding for iOS devices with notche
   },
   sectionHeaderContainer: {
