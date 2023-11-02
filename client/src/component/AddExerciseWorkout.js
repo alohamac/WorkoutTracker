@@ -4,7 +4,7 @@ import ExercisesScreen from '../screens/LogInScreen/exercisesScreen';
 import CustomButton from './CustomButton';
 import SelectExercises from './SelectExercise';
 
-const ExerciseModal = ({visible, closeModal, updateSelectedExercises}) => {
+const ExerciseModal = ({closeModal, updateSelectedExercises}) => {
   const [selectedExercises, setSelectedExercises] = useState([]);
 
   const toggleItemSelection = item => {
@@ -23,7 +23,7 @@ const ExerciseModal = ({visible, closeModal, updateSelectedExercises}) => {
   };
 
   return (
-    <Modal visible={visible} animationType="fade" transparent={true}>
+    <Modal animationType="fade" transparent={true}>
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>Add Exercises</Text>

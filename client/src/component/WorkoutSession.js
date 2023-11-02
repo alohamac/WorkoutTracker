@@ -14,10 +14,6 @@ const WorkoutSession = () => {
 
   const handleSheetChanges = useCallback(index => {}, []);
 
-  const openExerciseModal = () => {
-    setExerciseModalVisible(true);
-  };
-
   const closeExerciseModal = () => {
     setExerciseModalVisible(false);
   };
@@ -27,7 +23,7 @@ const WorkoutSession = () => {
   };
 
   const updateSelectedExercises = selectedExercises => {
-    setExercises(selectedExercises);
+    setExercises([...Exercises, selectedExercises]);
   };
 
   return (
@@ -51,9 +47,11 @@ const WorkoutSession = () => {
               }}
             />
           </View>
-          {isExerciseListVisible && (
+          {Exercises.length && (
             <View style={styles.selectedExercisesContainer}>
-              <Text style={styles.selectedExercisesTitle}>Selected Exercises:</Text>
+              <Text style={styles.selectedExercisesTitle}>
+                Selected Exercises:
+              </Text>
               {Exercises.map((exercise, index) => (
                 <Text key={index} style={styles.selectedExerciseItem}>
                   {exercise}
@@ -63,12 +61,12 @@ const WorkoutSession = () => {
           )}
         </View>
       </BottomSheet>
-
-      <ExerciseModal
-        visible={isExerciseModalVisible}
-        closeModal={closeExerciseModal}
-        updateSelectedExercises={updateSelectedExercises}
-      />
+      {isExerciseModalVisible && (
+        <ExerciseModal
+          closeModal={closeExerciseModal}
+          updateSelectedExercises={updateSelectedExercises}
+        />
+      )}
     </View>
   );
 };

@@ -6,7 +6,6 @@ import {AlphabetList} from 'react-native-section-alphabet-list';
 
 const SelectExercises = ({setSelectedExercises, selectedExercises}) => {
   const [exercises, SetExercises] = useState([]);
-  const [selectedItems, SetSelectedItems] = useState([]);
 
   useEffect(() => {
     async function fetchExercises() {
