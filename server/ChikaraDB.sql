@@ -40,9 +40,9 @@ CREATE TABLE WorkoutExercises (
     WorkoutID INT,
     ExerciseID INT,
     Sets INT,
-    Reps INT,
-    Weight NUMERIC(5, 2), 
-    Duration INTERVAL,
+    Weights NUMERIC[] CHECK(array_length(Weights, 1) = Sets),
+    Reps INT[] CHECK(array_length(Reps, 1) = Sets),
+    Durations INTERVAL[] CHECK(array_length(Durations, 1) = Sets),
     FOREIGN KEY (WorkoutID) REFERENCES Workouts(WorkoutID),
     FOREIGN KEY (ExerciseID) REFERENCES Exercises(ExerciseID)
 );
