@@ -1,8 +1,10 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TextInput} from 'react-native';
 import BottomSheet from '@gorhom/bottom-sheet';
 import CustomButton from './CustomButton';
 import ExerciseModal from './AddExerciseWorkout';
+import SetInput from './SetInput';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const WorkoutSession = () => {
   const bottomSheetRef = useRef(null);
@@ -24,7 +26,6 @@ const WorkoutSession = () => {
 
   const updateSelectedExercises = selectedExercises => {
     Exercises.push(...selectedExercises);
-    console.log(Exercises);
   };
 
   return (
@@ -34,7 +35,7 @@ const WorkoutSession = () => {
         index={1}
         snapPoints={snapPoints}
         onChange={handleSheetChanges}>
-        <View style={styles.contentContainer}>
+        <View>
           <Text style={styles.title}>Workout</Text>
           <View style={{padding: 15}}>
             <CustomButton
@@ -48,19 +49,19 @@ const WorkoutSession = () => {
               }}
             />
           </View>
+        </View>
+        <ScrollView style={styles.contentContainer}>
           {Exercises.length ? (
             <View style={styles.selectedExercisesContainer}>
-              <Text style={styles.selectedExercisesTitle}>
-                Selected Exercises:
-              </Text>
               {Exercises.map((exercise, index) => (
-                <Text key={index} style={styles.selectedExerciseItem}>
-                  {exercise.value}
-                </Text>
+                <View key={index}>
+                  <Text>{exercise.value}</Text>
+                  <SetInput />
+                </View>
               ))}
             </View>
           ) : null}
-        </View>
+        </ScrollView>
       </BottomSheet>
       {isExerciseModalVisible && (
         <ExerciseModal
