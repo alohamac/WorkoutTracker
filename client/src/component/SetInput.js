@@ -1,71 +1,77 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   Text,
   View,
   TextInput,
   Button,
   StyleSheet,
-  FlatList,
-	Pressable,
+  Pressable,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {WorkoutSessionContext} from './WorkoutSessionProvider';
 
-const SetInput = () => {
-  const [weight, setWeight] = useState('');
-  const [reps, setReps] = useState('');
-  const [sets, setSets] = useState([]);
-
-  const handleWeightChange = (text, index) => {
-    setSets((prevSets) =>
-      prevSets.map((set, i) =>
-        i === index ? { ...set, weight: text } : set
-      )
-    );
-  };
-
-  const handleRepsChange = (text, index) => {
-    setSets((prevSets) =>
-      prevSets.map((set, i) =>
-        i === index ? { ...set, reps: text } : set
-      )
-    );
-  };
-
+const SetInput = ({exerciseIndex}) => {
+  const {exerciseSets, updateExerciseSets} = useContext(WorkoutSessionContext);
 
   const handleAddSet = () => {
-    setSets([...sets, { weight: '', reps: '' }]);
+    const newSet = {weight: '', reps: '', id: Date.now()};
+    const updatedSets = exerciseSets[exerciseIndex]
+      ? [...exerciseSets[exerciseIndex], newSet]
+      : [newSet];
+    updateExerciseSets(exerciseIndex, updatedSets);
   };
 
+  const handleDeleteSet = setId => {
+    const updatedSets = exerciseSets[exerciseIndex].filter(
+      set => set.id !== setId,
+    );
+    updateExerciseSets(exerciseIndex, updatedSets);
+  };
 
-  useEffect(() => {
-    setSets([...sets, {weight: '', reps: ''}]);
-  }, []);
-	
+  const handleWeightChange = (text, setId) => {
+    const updatedSets = exerciseSets[exerciseIndex].map(set =>
+      set.id === setId ? {...set, weight: text} : set,
+    );
+    updateExerciseSets(exerciseIndex, updatedSets);
+  };
+
+  const handleRepsChange = (text, setId) => {
+    const updatedSets = exerciseSets[exerciseIndex].map(set =>
+      set.id === setId ? {...set, reps: text} : set,
+    );
+    updateExerciseSets(exerciseIndex, updatedSets);
+  };
+
   return (
     <View>
-      {sets.map((item, index) => (
-        <View key={index} style={styles.container}>
-          <Text>{index + 1}</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Weight (lbs)"
-            keyboardType="numeric"
-            value={item.weight}
-            onChangeText={(text) => handleWeightChange(text, index)}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Reps"
-            keyboardType="numeric"
-            value={item.reps}
-            onChangeText={(text) => handleRepsChange(text, index)}
-          />
-					<Pressable>
-						<Ionicons name='checkmark-sharp' size={20}/>
-					</Pressable>
-        </View>
-      ))}
-			<Button title="Add Set" onPress={handleAddSet} />
+      {exerciseSets[exerciseIndex] &&
+        exerciseSets[exerciseIndex].map((set, index) => (
+          <View key={set.id} style={styles.container}>
+            <Text style={styles.set}>{index + 1}</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Weight (lbs)"
+              keyboardType="numeric"
+              value={set.weight}
+              onChangeText={text => handleWeightChange(text, set.id)}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Reps"
+              keyboardType="numeric"
+              value={set.reps}
+              onChangeText={text => handleRepsChange(text, set.id)}
+            />
+            <Pressable
+              style={styles.checkButton}
+              onPress={() => {
+                handleDeleteSet(set.id);
+              }}>
+              <Ionicons name="trash-sharp" size={20} />
+            </Pressable>
+          </View>
+        ))}
+      <Button title="Add Set" onPress={handleAddSet} />
     </View>
   );
 };
@@ -84,6 +90,13 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 5,
     padding: 5,
+  },
+  set: {
+    fontSize: 20,
+    marginEnd: 10,
+  },
+  checkButton: {
+    margin: 10,
   },
 });
 

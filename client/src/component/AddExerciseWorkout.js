@@ -7,7 +7,6 @@ const ExerciseModal = ({closeModal, updateSelectedExercises}) => {
   const [selectedExercises, setSelectedExercises] = useState([]);
 
   const toggleItemSelection = item => {
-		console.log(selectedExercises)
     if (selectedExercises.includes(item)) {
       setSelectedExercises(
         selectedExercises.filter(selectedItem => selectedItem !== item),

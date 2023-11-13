@@ -5,13 +5,13 @@ import CustomButton from './CustomButton';
 import ExerciseModal from './AddExerciseWorkout';
 import SetInput from './SetInput';
 import {ScrollView} from 'react-native-gesture-handler';
+import WorkoutSessionProvider from './WorkoutSessionProvider';
 
 const WorkoutSession = () => {
   const bottomSheetRef = useRef(null);
   const [isExerciseModalVisible, setExerciseModalVisible] = useState(false);
   const [isExerciseListVisible, setIsExerciseListVisible] = useState(false);
   const [Exercises, setExercises] = useState([]);
-
   const snapPoints = useMemo(() => ['25%', '50%', '75%', '100%'], []);
 
   const handleSheetChanges = useCallback(index => {}, []);
@@ -28,48 +28,53 @@ const WorkoutSession = () => {
     Exercises.push(...selectedExercises);
   };
 
+  const onFinishPress = () => {};
+
   return (
-    <View style={styles.container}>
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={1}
-        snapPoints={snapPoints}
-        onChange={handleSheetChanges}>
-        <View>
-          <Text style={styles.title}>Workout</Text>
-          <View style={{padding: 15}}>
-            <CustomButton
-              text="Add Exercises"
-              bgColor="#EBF6FF"
-              fgColor="#35A6FF"
-              fSize={18}
-              onPress={() => {
-                setExerciseModalVisible(true);
-                toggleExerciseListVisibility();
-              }}
-            />
-          </View>
-        </View>
-        <ScrollView style={styles.contentContainer}>
-          {Exercises.length ? (
-            <View style={styles.selectedExercisesContainer}>
-              {Exercises.map((exercise, index) => (
-                <View key={index}>
-                  <Text>{exercise.value}</Text>
-                  <SetInput />
-                </View>
-              ))}
+    <WorkoutSessionProvider>
+      <View style={styles.container}>
+        <BottomSheet
+          ref={bottomSheetRef}
+          index={1}
+          snapPoints={snapPoints}
+          onChange={handleSheetChanges}>
+          <View>
+            <Text style={styles.title}>Workout</Text>
+            <CustomButton text="Finish" />
+            <View style={{padding: 15}}>
+              <CustomButton
+                text="Add Exercises"
+                bgColor="#EBF6FF"
+                fgColor="#35A6FF"
+                fSize={18}
+                onPress={() => {
+                  setExerciseModalVisible(true);
+                  toggleExerciseListVisibility();
+                }}
+              />
             </View>
-          ) : null}
-        </ScrollView>
-      </BottomSheet>
-      {isExerciseModalVisible && (
-        <ExerciseModal
-          closeModal={closeExerciseModal}
-          updateSelectedExercises={updateSelectedExercises}
-        />
-      )}
-    </View>
+          </View>
+          <ScrollView style={styles.contentContainer}>
+            {Exercises.length ? (
+              <View style={styles.selectedExercisesContainer}>
+                {Exercises.map((exercise, index) => (
+                  <View key={index}>
+                    <Text>{exercise.value}</Text>
+                    <SetInput exerciseIndex={index} />
+                  </View>
+                ))}
+              </View>
+            ) : null}
+          </ScrollView>
+        </BottomSheet>
+        {isExerciseModalVisible && (
+          <ExerciseModal
+            closeModal={closeExerciseModal}
+            updateSelectedExercises={updateSelectedExercises}
+          />
+        )}
+      </View>
+    </WorkoutSessionProvider>
   );
 };
 
