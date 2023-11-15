@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import CustomButton from '../../component/CustomButton';
 import WorkoutSession from '../../component/WorkoutSession';
+import WorkoutSessionProvider from '../../component/WorkoutSessionProvider';
 
 const StartWorkoutScreen = () => {
   const [workout, setWorkout] = useState(true);
@@ -13,7 +14,11 @@ const StartWorkoutScreen = () => {
   return (
     <View style={styles.root}>
       <CustomButton text="Start Workout" onPress={onStartWorkoutPress} />
-      {workout ? <WorkoutSession /> : null}
+      {workout ? (
+        <WorkoutSessionProvider>
+          <WorkoutSession />
+        </WorkoutSessionProvider>
+      ) : null}
     </View>
   );
 };
