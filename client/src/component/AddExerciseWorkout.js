@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, Modal, StyleSheet} from 'react-native';
+import {View, Text, TextInput, Modal, StyleSheet} from 'react-native';
 import CustomButton from './CustomButton';
 import SelectExercises from './SelectExercise';
 
@@ -7,7 +7,6 @@ const ExerciseModal = ({closeModal, updateSelectedExercises}) => {
   const [selectedExercises, setSelectedExercises] = useState([]);
 
   const toggleItemSelection = item => {
-		console.log(selectedExercises)
     if (selectedExercises.includes(item)) {
       setSelectedExercises(
         selectedExercises.filter(selectedItem => selectedItem !== item),
@@ -19,7 +18,8 @@ const ExerciseModal = ({closeModal, updateSelectedExercises}) => {
 
   const closeAndSendSelectedExercises = () => {
     closeModal();
-    updateSelectedExercises(selectedExercises);
+    const newExercises = selectedExercises.map(obj => ({...obj, sets: [{reps: 0, weight: 0}]}))
+    updateSelectedExercises(newExercises);
   };
 
   return (

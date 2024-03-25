@@ -1,11 +1,11 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react';
-import {View, Text, StyleSheet, TextInput} from 'react-native';
+import {View, Text, StyleSheet, TextInput, Button} from 'react-native';
 import BottomSheet from '@gorhom/bottom-sheet';
 import CustomButton from './CustomButton';
 import ExerciseModal from './AddExerciseWorkout';
-import SetInput from './SetInput';
 import {ScrollView} from 'react-native-gesture-handler';
-
+import {DataTable} from 'react-native-paper';
+import { produce } from 'immer';
 const WorkoutSession = () => {
   const bottomSheetRef = useRef(null);
   const [isExerciseModalVisible, setExerciseModalVisible] = useState(false);
@@ -28,6 +28,13 @@ const WorkoutSession = () => {
     Exercises.push(...selectedExercises);
   };
 
+  const onAddSetPress = exerciseIndex => {
+    setExercises(
+      produce(Exercises, draftExercises => {
+        draftExercises[exerciseIndex].sets.push({reps: 0, weight: 0});
+      })
+    )
+  };
   return (
     <View style={styles.container}>
       <BottomSheet
@@ -51,12 +58,66 @@ const WorkoutSession = () => {
           </View>
         </View>
         <ScrollView style={styles.contentContainer}>
+          {/*renders each selected exercise*/}
           {Exercises.length ? (
             <View style={styles.selectedExercisesContainer}>
-              {Exercises.map((exercise, index) => (
-                <View key={index}>
-                  <Text>{exercise.value}</Text>
-                  <SetInput />
+              {/*Renders each set of an exercises*/}
+              {Exercises.map((exercise, exerciseIndex) => (
+                <View key={exerciseIndex}>
+                  {exercise.sets.length ? (
+                    <View>
+                      <Text>{exercise.value}</Text>
+                      <DataTable>
+                        <DataTable.Header>
+                          <DataTable.Title numeric>Set</DataTable.Title>
+                          <DataTable.Title numeric>Reps</DataTable.Title>
+                          <DataTable.Title numeric>Weight</DataTable.Title>
+                        </DataTable.Header>
+                        {exercise.sets.map((set, setIndex) => (
+                          <View key={setIndex}>
+                            <DataTable.Row>
+                              <DataTable.Cell>{setIndex + 1}</DataTable.Cell>
+                              <DataTable.Cell>
+                                <TextInput
+                                  style={styles.setInput}
+                                  placeholder={String(set.reps)}
+                                  keyboardType="numeric"
+                                  value={Exercises[exerciseIndex][setIndex]}
+                                  // onChangeText={text =>
+                                  //   handleWeightChange(text, index)
+                                  // }
+                                />
+                              </DataTable.Cell>
+                              <DataTable.Cell>
+                                <TextInput
+                                  style={styles.setInput}
+                                  placeholder={String(set.weight)}
+                                  keyboardType="numeric"
+                                  value={Exercises[exerciseIndex][setIndex]}
+                                  // onChangeText={text =>
+                                  //   handleWeightChange(text, index)
+                                  // }
+                                />
+                              </DataTable.Cell>
+                            </DataTable.Row>
+                            {/* <TextInput
+                            style={styles.setInput}
+                            placeholder={String(set.reps)}
+                            keyboardType="numeric"
+                            value={Exercises[exerciseIndex][setIndex]}
+                            // onChangeText={text =>
+                            //   handleWeightChange(text, index)
+                            // }
+                          /> */}
+                          </View>
+                        ))}
+                      </DataTable>
+                      <Button
+                        title="Add Set"
+                        onPress={() => onAddSetPress(exerciseIndex)}
+                      />
+                    </View>
+                  ) : null}
                 </View>
               ))}
             </View>
@@ -96,6 +157,20 @@ const styles = StyleSheet.create({
   },
   selectedExerciseItem: {
     fontSize: 16,
+  },
+  setContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  setInput: {
+    width: 100,
+    height: 40,
+    margin: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 5,
   },
 });
 
