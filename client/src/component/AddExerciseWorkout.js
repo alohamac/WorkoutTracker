@@ -18,7 +18,7 @@ const ExerciseModal = ({closeModal, updateSelectedExercises}) => {
 
   const closeAndSendSelectedExercises = () => {
     closeModal();
-    const newExercises = selectedExercises.map(obj => ({...obj, sets: [{reps: 0, weight: 0}]}))
+    const newExercises = selectedExercises.map(obj => ({...obj, sets: [{id: Date.now(), reps: 0, weight: 0}]}))
     updateSelectedExercises(newExercises);
   };
 

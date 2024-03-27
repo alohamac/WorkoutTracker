@@ -1,11 +1,12 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {View, Text, StyleSheet, TextInput, Button} from 'react-native';
 import BottomSheet from '@gorhom/bottom-sheet';
 import CustomButton from './CustomButton';
 import ExerciseModal from './AddExerciseWorkout';
 import {ScrollView} from 'react-native-gesture-handler';
-import {DataTable} from 'react-native-paper';
-import { produce } from 'immer';
+import {produce} from 'immer';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
 const WorkoutSession = () => {
   const bottomSheetRef = useRef(null);
   const [isExerciseModalVisible, setExerciseModalVisible] = useState(false);
@@ -31,10 +32,41 @@ const WorkoutSession = () => {
   const onAddSetPress = exerciseIndex => {
     setExercises(
       produce(Exercises, draftExercises => {
-        draftExercises[exerciseIndex].sets.push({reps: 0, weight: 0});
-      })
-    )
+        draftExercises[exerciseIndex].sets.push({id: Date.now(), reps: 0, weight: 0});
+      }),
+    );
   };
+  
+  const onDeleteSetPress = (exerciseIndex, setId) => {
+    setExercises(
+      produce(Exercises, draftExercises => {
+        const sets = draftExercises[exerciseIndex].sets;
+        const setIndex = sets.findIndex(set => set.id === setId);
+        if (setIndex !== -1) {
+          sets.splice(setIndex, 1);
+        }
+      }),
+    );
+  };
+  
+  
+
+  const handleRepChange = (exerciseIndex, setIndex, text) => {
+    setExercises(
+      produce(Exercises, draftExercises => {
+        draftExercises[exerciseIndex].sets[setIndex].reps = text;
+      }),
+    );
+  };
+
+  const handleWeightChange = (exerciseIndex, setIndex, text) => {
+    setExercises(
+      produce(Exercises, draftExercises => {
+        draftExercises[exerciseIndex].sets[setIndex].weight = text;
+      }),
+    );
+  };
+
   return (
     <View style={styles.container}>
       <BottomSheet
@@ -67,51 +99,35 @@ const WorkoutSession = () => {
                   {exercise.sets.length ? (
                     <View>
                       <Text>{exercise.value}</Text>
-                      <DataTable>
-                        <DataTable.Header>
-                          <DataTable.Title numeric>Set</DataTable.Title>
-                          <DataTable.Title numeric>Reps</DataTable.Title>
-                          <DataTable.Title numeric>Weight</DataTable.Title>
-                        </DataTable.Header>
-                        {exercise.sets.map((set, setIndex) => (
-                          <View key={setIndex}>
-                            <DataTable.Row>
-                              <DataTable.Cell>{setIndex + 1}</DataTable.Cell>
-                              <DataTable.Cell>
-                                <TextInput
-                                  style={styles.setInput}
-                                  placeholder={String(set.reps)}
-                                  keyboardType="numeric"
-                                  value={Exercises[exerciseIndex][setIndex]}
-                                  // onChangeText={text =>
-                                  //   handleWeightChange(text, index)
-                                  // }
-                                />
-                              </DataTable.Cell>
-                              <DataTable.Cell>
-                                <TextInput
-                                  style={styles.setInput}
-                                  placeholder={String(set.weight)}
-                                  keyboardType="numeric"
-                                  value={Exercises[exerciseIndex][setIndex]}
-                                  // onChangeText={text =>
-                                  //   handleWeightChange(text, index)
-                                  // }
-                                />
-                              </DataTable.Cell>
-                            </DataTable.Row>
-                            {/* <TextInput
+                      {exercise.sets.map((set, setIndex) => (
+                        <View
+                          key={set.id}
+                          style={{flexDirection: 'row', alignItems: 'center'}}>
+                          <Text style={{flex: 0.25}}>{setIndex + 1}</Text>
+                          <TextInput
                             style={styles.setInput}
-                            placeholder={String(set.reps)}
+                            placeholder={'Reps'}
                             keyboardType="numeric"
-                            value={Exercises[exerciseIndex][setIndex]}
-                            // onChangeText={text =>
-                            //   handleWeightChange(text, index)
-                            // }
-                          /> */}
-                          </View>
-                        ))}
-                      </DataTable>
+                            onChangeText={text =>
+                              handleRepChange(exerciseIndex, setIndex, text)
+                            }
+                          />
+                          <TextInput
+                            style={styles.setInput}
+                            placeholder={'Weight'}
+                            keyboardType="numeric"
+                            onChangeText={text =>
+                              handleWeightChange(exerciseIndex, setIndex, text)
+                            }
+                          />
+                          <Ionicons
+                            name="trash-outline"
+                            size={30}
+                            color="red"
+                            onPress={()=>onDeleteSetPress(exerciseIndex, set.id)}
+                          />
+                        </View>
+                      ))}
                       <Button
                         title="Add Set"
                         onPress={() => onAddSetPress(exerciseIndex)}
@@ -164,13 +180,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   setInput: {
-    width: 100,
+    // width: 100,
     height: 40,
-    margin: 10,
+    margin: 5,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
-    padding: 5,
+    // padding: 5,
+    textAlign: 'center',
+    flex: 1,
   },
 });
 
