@@ -1,8 +1,16 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {View, Text, StyleSheet, TextInput, Button} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Button,
+  Pressable,
+} from 'react-native';
 import BottomSheet from '@gorhom/bottom-sheet';
 import CustomButton from './CustomButton';
 import ExerciseModal from './AddExerciseWorkout';
+import FinishWorkoutConfirmation from './FinishWorkoutConfirmation';
 import {ScrollView} from 'react-native-gesture-handler';
 import {produce} from 'immer';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -11,6 +19,7 @@ const WorkoutSession = () => {
   const bottomSheetRef = useRef(null);
   const [isExerciseModalVisible, setExerciseModalVisible] = useState(false);
   const [isExerciseListVisible, setIsExerciseListVisible] = useState(false);
+  const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
   const [Exercises, setExercises] = useState([]);
 
   const snapPoints = useMemo(() => ['25%', '50%', '75%', '100%'], []);
@@ -32,11 +41,15 @@ const WorkoutSession = () => {
   const onAddSetPress = exerciseIndex => {
     setExercises(
       produce(Exercises, draftExercises => {
-        draftExercises[exerciseIndex].sets.push({id: Date.now(), reps: 0, weight: 0});
+        draftExercises[exerciseIndex].sets.push({
+          id: Date.now(),
+          reps: 0,
+          weight: 0,
+        });
       }),
     );
   };
-  
+
   const onDeleteSetPress = (exerciseIndex, setId) => {
     setExercises(
       produce(Exercises, draftExercises => {
@@ -48,8 +61,6 @@ const WorkoutSession = () => {
       }),
     );
   };
-  
-  
 
   const handleRepChange = (exerciseIndex, setIndex, text) => {
     setExercises(
@@ -67,6 +78,10 @@ const WorkoutSession = () => {
     );
   };
 
+  const setConfirmationVisibility = () => {
+    setIsConfirmationVisible(!isConfirmationVisible);
+  };
+
   return (
     <View style={styles.container}>
       <BottomSheet
@@ -75,7 +90,15 @@ const WorkoutSession = () => {
         snapPoints={snapPoints}
         onChange={handleSheetChanges}>
         <View>
+          <Pressable
+            style={styles.finishButton}
+            onPress={() => {
+              setConfirmationVisibility();
+            }}>
+            <Text style={{fontSize: 20, color: 'white'}}>Finish</Text>
+          </Pressable>
           <Text style={styles.title}>Workout</Text>
+
           <View style={{padding: 15}}>
             <CustomButton
               text="Add Exercises"
@@ -124,7 +147,9 @@ const WorkoutSession = () => {
                             name="trash-outline"
                             size={30}
                             color="red"
-                            onPress={()=>onDeleteSetPress(exerciseIndex, set.id)}
+                            onPress={() =>
+                              onDeleteSetPress(exerciseIndex, set.id)
+                            }
                           />
                         </View>
                       ))}
@@ -146,6 +171,7 @@ const WorkoutSession = () => {
           updateSelectedExercises={updateSelectedExercises}
         />
       )}
+      {isConfirmationVisible && <FinishWorkoutConfirmation closeModal={setConfirmationVisibility}/>}
     </View>
   );
 };
@@ -189,6 +215,14 @@ const styles = StyleSheet.create({
     // padding: 5,
     textAlign: 'center',
     flex: 1,
+  },
+  finishButton: {
+    alignSelf: 'flex-end',
+    paddingHorizontal: 9,
+    paddingVertical: 5,
+    backgroundColor: '#2ecd6f',
+    marginRight: 20,
+    borderRadius: 5,
   },
 });
 
