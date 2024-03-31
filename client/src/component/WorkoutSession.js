@@ -13,6 +13,7 @@ import ExerciseModal from './AddExerciseWorkout';
 import FinishWorkoutConfirmation from './FinishWorkoutConfirmation';
 import {ScrollView} from 'react-native-gesture-handler';
 import {produce} from 'immer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const WorkoutSession = () => {
@@ -20,7 +21,9 @@ const WorkoutSession = () => {
   const [isExerciseModalVisible, setExerciseModalVisible] = useState(false);
   const [isExerciseListVisible, setIsExerciseListVisible] = useState(false);
   const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
-  const [Exercises, setExercises] = useState([]);
+  const [workoutName, setWorkoutName] = useState('Workout');
+  const [exercises, setExercises] = useState([]);
+  const [emptySets, setEmptySets] = useState([]);
 
   const snapPoints = useMemo(() => ['25%', '50%', '75%', '100%'], []);
 
@@ -35,16 +38,16 @@ const WorkoutSession = () => {
   };
 
   const updateSelectedExercises = selectedExercises => {
-    Exercises.push(...selectedExercises);
+    exercises.push(...selectedExercises);
   };
 
   const onAddSetPress = exerciseIndex => {
     setExercises(
-      produce(Exercises, draftExercises => {
+      produce(exercises, draftExercises => {
         draftExercises[exerciseIndex].sets.push({
           id: Date.now(),
-          reps: 0,
-          weight: 0,
+          reps: '',
+          weight: '',
         });
       }),
     );
@@ -52,7 +55,7 @@ const WorkoutSession = () => {
 
   const onDeleteSetPress = (exerciseIndex, setId) => {
     setExercises(
-      produce(Exercises, draftExercises => {
+      produce(exercises, draftExercises => {
         const sets = draftExercises[exerciseIndex].sets;
         const setIndex = sets.findIndex(set => set.id === setId);
         if (setIndex !== -1) {
@@ -64,7 +67,7 @@ const WorkoutSession = () => {
 
   const handleRepChange = (exerciseIndex, setIndex, text) => {
     setExercises(
-      produce(Exercises, draftExercises => {
+      produce(exercises, draftExercises => {
         draftExercises[exerciseIndex].sets[setIndex].reps = text;
       }),
     );
@@ -72,7 +75,7 @@ const WorkoutSession = () => {
 
   const handleWeightChange = (exerciseIndex, setIndex, text) => {
     setExercises(
-      produce(Exercises, draftExercises => {
+      produce(exercises, draftExercises => {
         draftExercises[exerciseIndex].sets[setIndex].weight = text;
       }),
     );
@@ -80,6 +83,40 @@ const WorkoutSession = () => {
 
   const setConfirmationVisibility = () => {
     setIsConfirmationVisible(!isConfirmationVisible);
+  };
+
+  const completeWorkout = async () => {
+    const baseUrl = Platform.OS === 'android' ? '10.0.2.2' : 'localhost';
+    try {
+      const user = JSON.parse(await AsyncStorage.getItem('userid'));
+      exercises.forEach(exercise => {
+        exercise.sets.forEach(set => {
+          if (set.reps === '' || set.weight === '') {
+            emptySets.push(set.id);
+          }
+        });
+      });
+      if (emptySets.length != 0) {
+        throw new Error('set not complete');
+      }
+      await fetch(
+        `http://${baseUrl}:8080/workouts/newWorkout/${user}/${workoutName}/${JSON.stringify(
+          exercises,
+        )}`,
+        {
+          method: 'POST',
+        },
+      )
+        .then(res => res.json())
+        .then(result => {
+          console.log(result);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    } catch (error) {
+      setIsConfirmationVisible(false);
+    }
   };
 
   return (
@@ -97,9 +134,17 @@ const WorkoutSession = () => {
             }}>
             <Text style={{fontSize: 20, color: 'white'}}>Finish</Text>
           </Pressable>
-          <Text style={styles.title}>Workout</Text>
+          <TextInput
+            style={styles.title}
+            placeholder="Workout"
+            onChangeText={text => setWorkoutName(text)}
+            value={workoutName}
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
 
-          <View style={{padding: 15}}>
+          <View>
+            {/* TODO: fix styling of custom button */}
             <CustomButton
               text="Add Exercises"
               bgColor="#EBF6FF"
@@ -114,19 +159,34 @@ const WorkoutSession = () => {
         </View>
         <ScrollView style={styles.contentContainer}>
           {/*renders each selected exercise*/}
-          {Exercises.length ? (
-            <View style={styles.selectedExercisesContainer}>
+          {exercises.length ? (
+            <View>
               {/*Renders each set of an exercises*/}
-              {Exercises.map((exercise, exerciseIndex) => (
+              {exercises.map((exercise, exerciseIndex) => (
                 <View key={exerciseIndex}>
                   {exercise.sets.length ? (
                     <View>
-                      <Text>{exercise.value}</Text>
+                      <Text style={styles.selectedExercisesTitle}>
+                        {exercise.value}
+                      </Text>
                       {exercise.sets.map((set, setIndex) => (
                         <View
                           key={set.id}
-                          style={{flexDirection: 'row', alignItems: 'center'}}>
-                          <Text style={{flex: 0.25}}>{setIndex + 1}</Text>
+                          style={[
+                            {
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                            },
+                            emptySets.includes(set.id)
+                              ? {backgroundColor: '#ff9494'}
+                              : null,
+                            set.reps != '' && set.weight != ''
+                              ? {backgroundColor: 'transparent'}
+                              : null,
+                          ]}>
+                          <Text style={{flex: 0.25, textAlign: 'center'}}>
+                            {setIndex + 1}
+                          </Text>
                           <TextInput
                             style={styles.setInput}
                             placeholder={'Reps'}
@@ -145,6 +205,7 @@ const WorkoutSession = () => {
                           />
                           <Ionicons
                             name="trash-outline"
+                            style={{flex: 0.25, textAlign: 'center'}}
                             size={30}
                             color="red"
                             onPress={() =>
@@ -171,7 +232,12 @@ const WorkoutSession = () => {
           updateSelectedExercises={updateSelectedExercises}
         />
       )}
-      {isConfirmationVisible && <FinishWorkoutConfirmation closeModal={setConfirmationVisibility}/>}
+      {isConfirmationVisible && (
+        <FinishWorkoutConfirmation
+          closeModal={setConfirmationVisibility}
+          submitWorkout={completeWorkout}
+        />
+      )}
     </View>
   );
 };
@@ -182,7 +248,7 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   title: {
-    padding: 15,
+    paddingLeft: 15,
     paddingBottom: 30,
     fontSize: 28,
     fontWeight: 'bold',
@@ -190,15 +256,15 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
   },
-  selectedExercisesContainer: {
-    margin: 20,
-  },
   selectedExercisesTitle: {
     fontSize: 20,
     fontWeight: 'bold',
+    paddingLeft: 15,
+    paddingVertical: 20,
   },
   selectedExerciseItem: {
     fontSize: 16,
+    paddingBottom: 20,
   },
   setContainer: {
     flexDirection: 'row',

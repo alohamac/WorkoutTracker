@@ -1,10 +1,13 @@
 import React, {useState} from 'react';
 import {Alert, Modal, StyleSheet, Text, Pressable, View} from 'react-native';
 
-const FinishWorkoutConfirmation = ({closeModal}) => {
+const FinishWorkoutConfirmation = ({closeModal, submitWorkout}) => {
   const onCancelPress = () => {
     closeModal();
   };
+  const onFinishPress = () => {
+    submitWorkout();
+  }
   return (
     <Modal animationType="fade" transparent={true}>
       <View style={styles.modalContainer}>
@@ -13,7 +16,7 @@ const FinishWorkoutConfirmation = ({closeModal}) => {
             Do you want to complete your workout?
           </Text>
           <View style={{flexDirection: 'row'}}>
-            <Pressable style={[styles.button, styles.buttonFinish]}>
+            <Pressable style={[styles.button, styles.buttonFinish]} onPress={()=>{onFinishPress()}}>
               <Text style={styles.textStyle}>Finish</Text>
             </Pressable>
             <Pressable style={[styles.button, styles.buttonCancel]} onPress={()=>{onCancelPress()}}>

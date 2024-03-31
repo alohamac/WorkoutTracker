@@ -5,7 +5,8 @@ import SelectExercises from './SelectExercise';
 
 const ExerciseModal = ({closeModal, updateSelectedExercises}) => {
   const [selectedExercises, setSelectedExercises] = useState([]);
-
+  
+  /* Function used to toggle an item selection */
   const toggleItemSelection = item => {
     if (selectedExercises.includes(item)) {
       setSelectedExercises(
@@ -16,12 +17,13 @@ const ExerciseModal = ({closeModal, updateSelectedExercises}) => {
     }
   };
 
+  /* Function used to close the exercise selection modal and send the selected exercises to the main workout screen to render */
   const closeAndSendSelectedExercises = () => {
     closeModal();
-    const newExercises = selectedExercises.map(obj => ({...obj, sets: [{id: Date.now(), reps: 0, weight: 0}]}))
+    const newExercises = selectedExercises.map(obj => ({...obj, sets: [{id: Date.now(), reps: '', weight: ''}]}))
     updateSelectedExercises(newExercises);
   };
-
+  
   return (
     <Modal animationType="fade" transparent={true}>
       <View style={styles.modalContainer}>
