@@ -11,6 +11,7 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import CustomButton from './CustomButton';
 import ExerciseModal from './AddExerciseWorkout';
 import FinishWorkoutConfirmation from './FinishWorkoutConfirmation';
+import Stopwatch from './Stopwatch';
 import {ScrollView} from 'react-native-gesture-handler';
 import {produce} from 'immer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -22,8 +23,11 @@ const WorkoutSession = () => {
   const [isExerciseListVisible, setIsExerciseListVisible] = useState(false);
   const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
   const [workoutName, setWorkoutName] = useState('Workout');
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
   const [exercises, setExercises] = useState([]);
   const [emptySets, setEmptySets] = useState([]);
+  const stopwatchRef = useRef(null);
 
   const snapPoints = useMemo(() => ['25%', '50%', '75%', '100%'], []);
 
@@ -85,6 +89,13 @@ const WorkoutSession = () => {
     setIsConfirmationVisible(!isConfirmationVisible);
   };
 
+  useEffect(() => {
+    setStartTime(Date.now().toString());
+    if (stopwatchRef.current) {
+      stopwatchRef.current.startStopwatch();
+    }
+  }, []);
+
   const completeWorkout = async () => {
     const baseUrl = Platform.OS === 'android' ? '10.0.2.2' : 'localhost';
     try {
@@ -100,7 +111,7 @@ const WorkoutSession = () => {
         throw new Error('set not complete');
       }
       await fetch(
-        `http://${baseUrl}:8080/workouts/newWorkout/${user}/${workoutName}/${JSON.stringify(
+        `http://${baseUrl}:8080/workouts/newWorkout/${user}/${workoutName}/${startTime}/${Date.now().toString()}/${JSON.stringify(
           exercises,
         )}`,
         {
@@ -127,13 +138,17 @@ const WorkoutSession = () => {
         snapPoints={snapPoints}
         onChange={handleSheetChanges}>
         <View>
-          <Pressable
-            style={styles.finishButton}
-            onPress={() => {
-              setConfirmationVisibility();
-            }}>
-            <Text style={{fontSize: 20, color: 'white'}}>Finish</Text>
-          </Pressable>
+          <View style={styles.rowContainer}>
+            <Stopwatch ref={stopwatchRef} />
+            <Pressable
+              style={styles.finishButton}
+              onPress={() => {
+                setConfirmationVisibility();
+              }}>
+              <Text style={{fontSize: 20, color: 'white'}}>Finish</Text>
+            </Pressable>
+          </View>
+
           <TextInput
             style={styles.title}
             placeholder="Workout"
@@ -249,9 +264,16 @@ const styles = StyleSheet.create({
   },
   title: {
     paddingLeft: 15,
-    paddingBottom: 30,
+    paddingVertical: 30,
     fontSize: 28,
     fontWeight: 'bold',
+  },
+  rowContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%', // Ensure it takes full width
+    paddingHorizontal: 20,
   },
   contentContainer: {
     flex: 1,
@@ -287,7 +309,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 9,
     paddingVertical: 5,
     backgroundColor: '#2ecd6f',
-    marginRight: 20,
     borderRadius: 5,
   },
 });

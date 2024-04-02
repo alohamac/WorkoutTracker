@@ -1,11 +1,12 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
+import Stopwatch from '../component/Stopwatch';
 
 const HistoryScreen = () => {
   return (
-    <View style={styles.root}>
-      <Text>History</Text>
-    </View>
+    // <View style={styles.root}>
+      <Stopwatch/>
+    // </View>
   );
 };
 

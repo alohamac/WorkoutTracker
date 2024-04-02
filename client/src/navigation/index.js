@@ -5,11 +5,11 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 //screens
-import LoginScreen from '../screens/LogInScreen/logInScreen';
-import HomeScreen from '../screens/LogInScreen/homeScreen';
-import ExercisesScreen from '../screens/LogInScreen/exercisesScreen';
-import StartWorkoutScreen from '../screens/LogInScreen/startWorkoutScreen';
-import HistoryScreen from '../screens/LogInScreen/historyScreen';
+import LoginScreen from '../screens/logInScreen';
+import HomeScreen from '../screens/homeScreen';
+import ExercisesScreen from '../screens/exercisesScreen';
+import StartWorkoutScreen from '../screens/startWorkoutScreen';
+import HistoryScreen from '../screens/historyScreen';
 
 const homeName = 'Home';
 const exercisesName = 'Exercises';

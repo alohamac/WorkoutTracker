@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import CustomButton from '../../component/CustomButton';
-import WorkoutSession from '../../component/WorkoutSession';
+import CustomButton from '../component/CustomButton';
+import WorkoutSession from '../component/WorkoutSession';
 
 const StartWorkoutScreen = () => {
   return (
