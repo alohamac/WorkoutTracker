@@ -1,5 +1,5 @@
 import React from 'react';
-import Navigation from './src/navigation';
+import Navigation from './src/navigation/StackNavigation';
 import {StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';

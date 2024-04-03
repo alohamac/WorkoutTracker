@@ -79,7 +79,6 @@ const WorkoutSession = () => {
           sets.splice(setIndex, 1);
         }
       }),
-      console.log("HHH")
     );
   };
 
@@ -114,7 +113,7 @@ const WorkoutSession = () => {
     const baseUrl = Platform.OS === 'android' ? '10.0.2.2' : 'localhost';
     try {
       const user = JSON.parse(await AsyncStorage.getItem('userid'));
-      
+
       if (exercises.length == 0) {
         throw new Error('No exercises added');
       }

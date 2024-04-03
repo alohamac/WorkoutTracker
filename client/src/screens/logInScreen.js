@@ -30,7 +30,7 @@ const LoginScreen = () => {
         await AsyncStorage.setItem('user', JSON.stringify(result));
         await AsyncStorage.setItem('username', JSON.stringify(result.username));
         await AsyncStorage.setItem('userid', JSON.stringify(result.userid));
-        navigation.navigate('Home');
+        navigation.navigate('Navigation');
       })
       .catch(error => {
         console.log(error);

@@ -6,7 +6,7 @@ import WorkoutSession from '../component/WorkoutSession';
 const StartWorkoutScreen = () => {
   return (
     <View style={styles.root}>
-      <CustomButton text="Start Workout" />
+      <CustomButton text="Start Workout"/>
       <WorkoutSession />
     </View>
     
