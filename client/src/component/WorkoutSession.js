@@ -42,7 +42,20 @@ const WorkoutSession = () => {
   };
 
   const updateSelectedExercises = selectedExercises => {
-    exercises.push(...selectedExercises);
+    setExercises(prevExercises => [...prevExercises, ...selectedExercises]);
+  };
+
+  const onDeleteExercisePress = exerciseKey => {
+    setExercises(
+      produce(exercises, draftExercises => {
+        const exerciseIndex = draftExercises.findIndex(
+          exercise => exercise.key === exerciseKey,
+        );
+        if (exerciseIndex !== -1) {
+          draftExercises.splice(exerciseIndex, 1);
+        }
+      }),
+    );
   };
 
   const onAddSetPress = exerciseIndex => {
@@ -66,6 +79,7 @@ const WorkoutSession = () => {
           sets.splice(setIndex, 1);
         }
       }),
+      console.log("HHH")
     );
   };
 
@@ -100,6 +114,11 @@ const WorkoutSession = () => {
     const baseUrl = Platform.OS === 'android' ? '10.0.2.2' : 'localhost';
     try {
       const user = JSON.parse(await AsyncStorage.getItem('userid'));
+      
+      if (exercises.length == 0) {
+        throw new Error('No exercises added');
+      }
+
       exercises.forEach(exercise => {
         exercise.sets.forEach(set => {
           if (set.reps === '' || set.weight === '') {
@@ -126,6 +145,7 @@ const WorkoutSession = () => {
           console.log(error);
         });
     } catch (error) {
+      console.log(error);
       setIsConfirmationVisible(false);
     }
   };
@@ -178,12 +198,19 @@ const WorkoutSession = () => {
             <View>
               {/*Renders each set of an exercises*/}
               {exercises.map((exercise, exerciseIndex) => (
-                <View key={exerciseIndex}>
+                <View key={exercise.key}>
                   {exercise.sets.length ? (
                     <View>
-                      <Text style={styles.selectedExercisesTitle}>
-                        {exercise.value}
-                      </Text>
+                      <View style={{paddingLeft: 15, paddingVertical: 10}}>
+                        <Text style={styles.selectedExercisesTitle}>
+                          {exercise.value}
+                        </Text>
+                        <Pressable
+                          onPress={()=>onDeleteExercisePress(exercise.key)}>
+                          <Ionicons name="ellipsis-horizontal" size={20} />
+                        </Pressable>
+                      </View>
+
                       {exercise.sets.map((set, setIndex) => (
                         <View
                           key={set.id}
@@ -281,8 +308,6 @@ const styles = StyleSheet.create({
   selectedExercisesTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    paddingLeft: 15,
-    paddingVertical: 20,
   },
   selectedExerciseItem: {
     fontSize: 16,
