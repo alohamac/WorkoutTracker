@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, FlatList } from "react-native";
 import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AlphabetList } from 'react-native-section-alphabet-list';
+import WorkoutSession from '../component/WorkoutSession';
+import { PortalHost } from '@gorhom/portal';
 
 const ExercisesScreen = () => {
   const [exercises, SetExercises] = useState([]);
@@ -50,6 +52,7 @@ const ExercisesScreen = () => {
         )}  
         indexContainerStye={{ background: 'red'}}
       />
+      <PortalHost name="Workout"/>
     </View>
   );
 }
@@ -58,6 +61,7 @@ const styles = StyleSheet.create({
   root: {
     fontFamily: 'Helvetica Pro Textbook',
     padding: 10,
+    flex: 1,
     //paddingTop: Platform.OS === 'ios' ? 50 : 20, // Add extra padding for iOS devices with notche
   },
   sectionHeaderContainer: {

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState, createContext} from 'react';
 import {
   View,
   Text,
@@ -7,7 +7,7 @@ import {
   Button,
   Pressable,
 } from 'react-native';
-import BottomSheet from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetModal } from '@gorhom/bottom-sheet';
 import CustomButton from './CustomButton';
 import ExerciseModal from './AddExerciseWorkout';
 import FinishWorkoutConfirmation from './FinishWorkoutConfirmation';
@@ -16,6 +16,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {produce} from 'immer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Portal } from '@gorhom/portal';
 
 const WorkoutSession = () => {
   const bottomSheetRef = useRef(null);
@@ -150,7 +151,7 @@ const WorkoutSession = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <Portal hostName="Workout">
       <BottomSheet
         ref={bottomSheetRef}
         index={1}
@@ -278,8 +279,8 @@ const WorkoutSession = () => {
           closeModal={setConfirmationVisibility}
           submitWorkout={completeWorkout}
         />
-      )}
-    </View>
+      )} 
+      </Portal>
   );
 };
 

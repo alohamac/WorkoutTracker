@@ -1,15 +1,16 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import CustomButton from '../component/CustomButton';
 import WorkoutSession from '../component/WorkoutSession';
+import {PortalHost, PortalProvider} from '@gorhom/portal';
 
 const StartWorkoutScreen = () => {
   return (
     <View style={styles.root}>
-      <CustomButton text="Start Workout"/>
-      <WorkoutSession />
+      <CustomButton text="Start Workout" />
+      <PortalHost name='Workout'/>
+      <WorkoutSession/>
     </View>
-    
   );
 };
 
