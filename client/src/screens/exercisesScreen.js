@@ -52,7 +52,7 @@ const ExercisesScreen = () => {
         )}  
         indexContainerStye={{ background: 'red'}}
       />
-      <PortalHost name="Workout"/>
+      {/* <PortalHost name="Workout"/> */}
     </View>
   );
 }

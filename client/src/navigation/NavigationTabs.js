@@ -1,6 +1,7 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {Dimensions} from 'react-native';
 
 //screens
 import HomeScreen from '../screens/homeScreen';
@@ -14,10 +15,13 @@ const startWorkoutName = 'Start Workout';
 const historyName = 'History';
 
 const Tab = createBottomTabNavigator();
+const tabBarHeight = Dimensions.get('window').height * 0.09;
+
 const NavigationTabs = () => {
   return (
     <Tab.Navigator
       initialRouteName={homeName}
+      sceneContainerStyle={{paddingBottom: 200}}
       screenOptions={({route}) => ({
         tabBarIcon: ({focused, color}) => {
           let iconName;
@@ -38,15 +42,13 @@ const NavigationTabs = () => {
         tabBarActiveTintColor: 'blue',
         tabBarInactiveTintColor: 'gray',
         tabBarLabelStyle: {fontSize: 12},
-      })}
+        tabBarStyle: {height: tabBarHeight, borderColor: 'gray'}
+      }
+      )}
       >
-      {/* <Tab.Navigator tabBar={props => <MyTabBar {...props} />}> */}
+    {/* <Tab.Navigator tabBar={props => <MyTabBar {...props} />}> */}
       <Tab.Screen name={homeName} component={HomeScreen} />
-      <Tab.Screen
-        name={startWorkoutName}
-        component={StartWorkoutScreen}
-        initialParams={{id: 123}}
-      />
+      <Tab.Screen name={startWorkoutName} component={StartWorkoutScreen} />
       <Tab.Screen name={exercisesName} component={ExercisesScreen} />
       <Tab.Screen name={historyName} component={HistoryScreen} />
     </Tab.Navigator>

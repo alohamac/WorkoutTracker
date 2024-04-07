@@ -8,8 +8,8 @@ const StartWorkoutScreen = () => {
   return (
     <View style={styles.root}>
       <CustomButton text="Start Workout" />
-      <PortalHost name='Workout'/>
-      <WorkoutSession/>
+      {/* <PortalHost name='Workout'/> */}
+      {/* <WorkoutSession/> */}
     </View>
   );
 };

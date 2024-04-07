@@ -26,7 +26,7 @@ const HomeScreen = () =>{
         <View style={styles.root}>
             <Text>Profile</Text>
             <Text style = {styles.boldText}>{data ? JSON.parse(data).username : ''}</Text>
-            <PortalHost name='Workout'/>
+            {/* <PortalHost name='Workout'/> */}
             
         </View>
     )

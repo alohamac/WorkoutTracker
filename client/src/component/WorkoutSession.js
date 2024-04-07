@@ -1,4 +1,11 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState, createContext} from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  createContext,
+} from 'react';
 import {
   View,
   Text,
@@ -7,7 +14,7 @@ import {
   Button,
   Pressable,
 } from 'react-native';
-import BottomSheet, { BottomSheetModal } from '@gorhom/bottom-sheet';
+import BottomSheet, {BottomSheetModal} from '@gorhom/bottom-sheet';
 import CustomButton from './CustomButton';
 import ExerciseModal from './AddExerciseWorkout';
 import FinishWorkoutConfirmation from './FinishWorkoutConfirmation';
@@ -16,7 +23,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {produce} from 'immer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Portal } from '@gorhom/portal';
+import {Portal} from '@gorhom/portal';
 
 const WorkoutSession = () => {
   const bottomSheetRef = useRef(null);
@@ -30,7 +37,7 @@ const WorkoutSession = () => {
   const [emptySets, setEmptySets] = useState([]);
   const stopwatchRef = useRef(null);
 
-  const snapPoints = useMemo(() => ['25%', '50%', '75%', '100%'], []);
+  const snapPoints = useMemo(() => ['10%', '25%', '50%', '75%', '100%'], []);
 
   const handleSheetChanges = useCallback(index => {}, []);
 
@@ -105,9 +112,11 @@ const WorkoutSession = () => {
 
   useEffect(() => {
     setStartTime(Date.now().toString());
-    if (stopwatchRef.current) {
-      stopwatchRef.current.startStopwatch();
-    }
+    setTimeout(() => {
+      if (stopwatchRef.current) {
+        stopwatchRef.current.startStopwatch();
+      }
+    }, 100);
   }, []);
 
   const completeWorkout = async () => {
@@ -119,13 +128,9 @@ const WorkoutSession = () => {
         throw new Error('No exercises added');
       }
 
-      exercises.forEach(exercise => {
-        exercise.sets.forEach(set => {
-          if (set.reps === '' || set.weight === '') {
-            emptySets.push(set.id);
-          }
-        });
-      });
+      console.log(`http://${baseUrl}:8080/workouts/newWorkout/${user}/${workoutName}/${startTime}/${Date.now().toString()}/${JSON.stringify(
+        exercises,
+      )}`)
       if (emptySets.length != 0) {
         throw new Error('set not complete');
       }
@@ -156,7 +161,9 @@ const WorkoutSession = () => {
         ref={bottomSheetRef}
         index={1}
         snapPoints={snapPoints}
-        onChange={handleSheetChanges}>
+        onChange={handleSheetChanges}
+        bottomInset={80}
+        style={styles.bottomSheet}>
         <View>
           <View style={styles.rowContainer}>
             <Stopwatch ref={stopwatchRef} />
@@ -206,7 +213,7 @@ const WorkoutSession = () => {
                           {exercise.value}
                         </Text>
                         <Pressable
-                          onPress={()=>onDeleteExercisePress(exercise.key)}>
+                          onPress={() => onDeleteExercisePress(exercise.key)}>
                           <Ionicons name="ellipsis-horizontal" size={20} />
                         </Pressable>
                       </View>
@@ -279,12 +286,22 @@ const WorkoutSession = () => {
           closeModal={setConfirmationVisibility}
           submitWorkout={completeWorkout}
         />
-      )} 
-      </Portal>
+      )}
+    </Portal>
   );
 };
 
 const styles = StyleSheet.create({
+  bottomSheet: {
+    backgroundColor: 'white',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: -3},
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+  },
   container: {
     flex: 1,
     padding: 24,
