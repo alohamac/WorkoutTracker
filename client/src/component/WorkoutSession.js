@@ -128,10 +128,18 @@ const WorkoutSession = () => {
         throw new Error('No exercises added');
       }
 
-      console.log(`http://${baseUrl}:8080/workouts/newWorkout/${user}/${workoutName}/${startTime}/${Date.now().toString()}/${JSON.stringify(
-        exercises,
-      )}`)
-      if (emptySets.length != 0) {
+      let newEmptySets = [];
+      exercises.forEach(exercise => {
+        exercise.sets.forEach(set => {
+          if (set.reps === '' || set.weight === '') {
+            newEmptySets.push(set.id);
+          }
+        });
+      });
+      
+      setEmptySets(newEmptySets);
+
+      if (newEmptySets.length !== 0) {
         throw new Error('set not complete');
       }
       await fetch(
