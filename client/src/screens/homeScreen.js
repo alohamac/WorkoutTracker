@@ -1,9 +1,7 @@
 import {View, Text, StyleSheet} from 'react-native';
 import React, { useEffect, useState } from 'react';
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import WorkoutSession from '../component/WorkoutSession';
-import { PortalHost } from '@gorhom/portal';
+
 const HomeScreen = () =>{
     const [data, setData] = useState(null);
 
@@ -25,9 +23,7 @@ const HomeScreen = () =>{
       
         <View style={styles.root}>
             <Text>Profile</Text>
-            <Text style = {styles.boldText}>{data ? JSON.parse(data).username : ''}</Text>
-            {/* <PortalHost name='Workout'/> */}
-            
+            <Text style = {styles.boldText}>{data ? JSON.parse(data).username : ''}</Text>            
         </View>
     )
 }

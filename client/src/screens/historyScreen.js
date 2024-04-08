@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import Stopwatch from '../component/Stopwatch';
-import { PortalHost } from '@gorhom/portal';
+
 const HistoryScreen = () => {
   return (
     <View style={styles.root}>

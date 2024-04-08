@@ -1,26 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Navigation from './src/navigation/StackNavigation';
 import {StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {PortalProvider, PortalHost} from '@gorhom/portal';
-import WorkoutSession from './src/component/WorkoutSession';
+import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 
 function App(): JSX.Element {
-  const [isVisible, setIsVisible] = useState(true);
   return (
     <GestureHandlerRootView style={{flex: 1}}>
-      <PortalProvider>
-        <SafeAreaView style={styles.root}>
+      <SafeAreaView style={styles.root}>
+        <BottomSheetModalProvider>
           <Navigation />
-          {isVisible && (
-            <>
-            <PortalHost name='Workout'/>
-            <WorkoutSession/>
-            </>
-          )}
-        </SafeAreaView>
-      </PortalProvider>
+        </BottomSheetModalProvider>
+      </SafeAreaView>
     </GestureHandlerRootView>
   );
 }

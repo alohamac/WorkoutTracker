@@ -14,7 +14,10 @@ import {
   Button,
   Pressable,
 } from 'react-native';
-import BottomSheet, {BottomSheetModal} from '@gorhom/bottom-sheet';
+import BottomSheet, {
+  BottomSheetModal,
+  BottomSheetFooter,
+} from '@gorhom/bottom-sheet';
 import CustomButton from './CustomButton';
 import ExerciseModal from './AddExerciseWorkout';
 import FinishWorkoutConfirmation from './FinishWorkoutConfirmation';
@@ -25,7 +28,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Portal} from '@gorhom/portal';
 
-const WorkoutSession = () => {
+const WorkoutSession = ({setIsWorkoutVisible}) => {
   const bottomSheetRef = useRef(null);
   const [isExerciseModalVisible, setExerciseModalVisible] = useState(false);
   const [isExerciseListVisible, setIsExerciseListVisible] = useState(false);
@@ -37,7 +40,7 @@ const WorkoutSession = () => {
   const [emptySets, setEmptySets] = useState([]);
   const stopwatchRef = useRef(null);
 
-  const snapPoints = useMemo(() => ['10%', '25%', '50%', '75%', '100%'], []);
+  const snapPoints = useMemo(() => [80, '25%', '50%', '75%', '100%'], []);
 
   const handleSheetChanges = useCallback(index => {}, []);
 
@@ -117,6 +120,7 @@ const WorkoutSession = () => {
         stopwatchRef.current.startStopwatch();
       }
     }, 100);
+    bottomSheetRef.current.present();
   }, []);
 
   const completeWorkout = async () => {
@@ -136,7 +140,7 @@ const WorkoutSession = () => {
           }
         });
       });
-      
+
       setEmptySets(newEmptySets);
 
       if (newEmptySets.length !== 0) {
@@ -153,6 +157,7 @@ const WorkoutSession = () => {
         .then(res => res.json())
         .then(result => {
           console.log(result);
+          setIsWorkoutVisible(false);
         })
         .catch(error => {
           console.log(error);
@@ -164,14 +169,15 @@ const WorkoutSession = () => {
   };
 
   return (
-    <Portal hostName="Workout">
-      <BottomSheet
+    <>
+      <BottomSheetModal
         ref={bottomSheetRef}
         index={1}
         snapPoints={snapPoints}
         onChange={handleSheetChanges}
         bottomInset={80}
-        style={styles.bottomSheet}>
+        style={styles.bottomSheet}
+        enablePanDownToClose={false}>
         <View>
           <View style={styles.rowContainer}>
             <Stopwatch ref={stopwatchRef} />
@@ -282,7 +288,7 @@ const WorkoutSession = () => {
             </View>
           ) : null}
         </ScrollView>
-      </BottomSheet>
+      </BottomSheetModal>
       {isExerciseModalVisible && (
         <ExerciseModal
           closeModal={closeExerciseModal}
@@ -295,7 +301,7 @@ const WorkoutSession = () => {
           submitWorkout={completeWorkout}
         />
       )}
-    </Portal>
+    </>
   );
 };
 
