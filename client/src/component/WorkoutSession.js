@@ -146,9 +146,14 @@ const WorkoutSession = ({setIsWorkoutVisible}) => {
       if (newEmptySets.length !== 0) {
         throw new Error('set not complete');
       }
+      const modifiedExercises = exercises.map(exercise => {
+        const {value, category, ...rest} = exercise;
+        return rest;
+      });
+      
       await fetch(
         `http://${baseUrl}:8080/workouts/newWorkout/${user}/${workoutName}/${startTime}/${Date.now().toString()}/${JSON.stringify(
-          exercises,
+          modifiedExercises,
         )}`,
         {
           method: 'POST',
@@ -157,7 +162,7 @@ const WorkoutSession = ({setIsWorkoutVisible}) => {
         .then(res => res.json())
         .then(result => {
           console.log(result);
-          setIsWorkoutVisible(false);
+          // setIsWorkoutVisible(false);
         })
         .catch(error => {
           console.log(error);
