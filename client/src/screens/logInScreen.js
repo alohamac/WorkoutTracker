@@ -7,9 +7,9 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {useState} from 'react';
-import LoginInput from '../../component/LoginInput';
-import Logo from '../../../assets/images/garfield.png';
-import CustomButton from '../../component/CustomButton';
+import LoginInput from '../component/LoginInput';
+import Logo from '../../assets/images/garfield.png';
+import CustomButton from '../component/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -30,7 +30,7 @@ const LoginScreen = () => {
         await AsyncStorage.setItem('user', JSON.stringify(result));
         await AsyncStorage.setItem('username', JSON.stringify(result.username));
         await AsyncStorage.setItem('userid', JSON.stringify(result.userid));
-        navigation.navigate('Home');
+        navigation.navigate('Navigation');
       })
       .catch(error => {
         console.log(error);

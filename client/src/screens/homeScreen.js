@@ -1,7 +1,7 @@
 import {View, Text, StyleSheet} from 'react-native';
 import React, { useEffect, useState } from 'react';
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const HomeScreen = () =>{
     const [data, setData] = useState(null);
 
@@ -20,9 +20,10 @@ const HomeScreen = () =>{
   
   
     return (
+      
         <View style={styles.root}>
             <Text>Profile</Text>
-            <Text style = {styles.boldText}>{data ? JSON.parse(data).username : ''}</Text>
+            <Text style = {styles.boldText}>{data ? JSON.parse(data).username : ''}</Text>            
         </View>
     )
 }
@@ -30,9 +31,10 @@ const HomeScreen = () =>{
 const styles = StyleSheet.create({
     root: {
       fontFamily: 'Helvetica Pro Textbook',
-      padding: 20,
+      // padding: 20,
       paddingTop: Platform.OS === 'ios' ? 50 : 20, // Add extra padding for iOS devices with notche
-      color: 'red'
+      color: 'red',
+      flex: 1,
     },
     boldText: {
       fontSize: 30, 

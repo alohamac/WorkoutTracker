@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
-import {View, Text, Modal, StyleSheet} from 'react-native';
+import {View, Text, TextInput, Modal, StyleSheet} from 'react-native';
 import CustomButton from './CustomButton';
 import SelectExercises from './SelectExercise';
 
 const ExerciseModal = ({closeModal, updateSelectedExercises}) => {
   const [selectedExercises, setSelectedExercises] = useState([]);
-
+  
+  /* Function used to toggle an item selection */
   const toggleItemSelection = item => {
-		console.log(selectedExercises)
     if (selectedExercises.includes(item)) {
       setSelectedExercises(
         selectedExercises.filter(selectedItem => selectedItem !== item),
@@ -17,11 +17,13 @@ const ExerciseModal = ({closeModal, updateSelectedExercises}) => {
     }
   };
 
+  /* Function used to close the exercise selection modal and send the selected exercises to the main workout screen to render */
   const closeAndSendSelectedExercises = () => {
     closeModal();
-    updateSelectedExercises(selectedExercises);
+    const newExercises = selectedExercises.map(obj => ({...obj, sets: [{id: Date.now(), reps: '', weight: ''}]}))
+    updateSelectedExercises(newExercises);
   };
-
+  
   return (
     <Modal animationType="fade" transparent={true}>
       <View style={styles.modalContainer}>

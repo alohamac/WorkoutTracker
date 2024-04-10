@@ -1,15 +1,12 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import CustomButton from '../../component/CustomButton';
-import WorkoutSession from '../../component/WorkoutSession';
+import {View, StyleSheet} from 'react-native';
+import CustomButton from '../component/CustomButton';
 
-const StartWorkoutScreen = () => {
+const StartWorkoutScreen = ({setWorkoutVisibility}) => {
   return (
     <View style={styles.root}>
-      <CustomButton text="Start Workout" />
-      <WorkoutSession />
+      <CustomButton text="Start Workout" onPress={()=>{setWorkoutVisibility(true)}}/>
     </View>
-    
   );
 };
 
